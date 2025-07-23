@@ -15,9 +15,9 @@ The goal is to predict whether an athlete will win a medal (Gold, Silver, or Bro
 - **Historical performance**: Country and sport success rates
 - **Additional Calulated Features**: BMI, performance ratios
 
-I considered multiple classification algorithms to implement including logistic regression and random forests, but landed on gradient boosting for this project.
+I considered multiple classification algorithms to implement including logistic regression and random forests, but landed on gradient boosting for this version.
 
-This repository includes the following files:
+The repository includes the following files:
 
 - ** olympic_ml_notebook.ipynb
     Imports, database connection, summary statistics, feature engineering, model developement and testing.
