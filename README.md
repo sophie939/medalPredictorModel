@@ -20,10 +20,10 @@ I considered multiple classification algorithms to implement including logistic 
 The repository includes the following files:
 
 -     olympic_ml_notebook.ipynb
-- Imports, database connection, summary statistics, feature engineering, model developement and testing.
+  Imports, database connection, summary statistics, feature engineering, model developement and testing.
 -     olympic_medal_predictor_gb.pkl
-- Stores the model that has just created to avoid re-training.
+  Stores the model that has just created to avoid re-training.
 -     model_metadata.pkl
-- Stores key information about the model including test results, hyperparameters and training data size.
+  Stores key information about the model including test results, hyperparameters and training data size.
 
 ---
