@@ -10,10 +10,10 @@ I created this project to practice implementing an end-to-end machine learning p
 
 The goal is to predict whether an athlete will win a medal (Gold, Silver, or Bronze) using:
 
-- **Athlete Physical Characteristics**: Height, weight, health metrics
-- **Country Economic Indicators**: GDP, GDP per capita, population
-- **Historical Performance**: Country and sport success rates
-- **Advanced Feature Engineering**: BMI, performance ratios, temporal features
+- **Physical attributes**: Height, weight, health metrics
+- **Economic data by country**: GDP, GDP per capita, population
+- **Historical performance**: Country and sport success rates
+- **Additional Calulated Features**: BMI, performance ratios
 
 I considered multiple classification algorithms to implement including logistic regression and random forests, but landed on gradient boosting for this project.
 
