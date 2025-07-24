@@ -15,7 +15,7 @@ Out of the initial features, I narrowed down my model to focus on the 16 feature
 - **Physical attributes**:
 -   Height, weight
 -   Derived values: BMI, a general health score and an injury risk score
--   Synthetic data using Python 'random' module: heart rate variability (synthetic), vo2Max (synthetic), blood oxygen levels (synthetic), 
+-   Synthetic data using Python 'random' module: heart rate variability, vo2Max, blood oxygen levels
 - **Economic data by country**:
 - Derived values: GDP per capita
 - **Historical performance**:
