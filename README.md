@@ -40,10 +40,17 @@ Jupyter notebooks:
 ---
 Pickle files:
 -     olympic_data_raw.pkl
-  Exploratory data analysis and feature engineering.
+  Extracted raw data from database.
+-     olympic_data_processed.pkl
+  Feature data pre-selection.
+-     features_X.pkl
+  Feature data post-selection.
+-     target_y.pkl
+  Data mapping whether an athlete wins a medal.
+-     feature_names.pkl
+  A list of feature column names.
+-     olympic_medal_predictor_gb.pkl
+  sklearn pipeline of the model.
 -     evaluation_results.pkl
-  Model and results.
--     notebook_3_model_dev.ipynb
-  Model development, hyperparameter optimsation and testing.
--     notebook_4_visualisation.ipynb
-  Results and visualisation.
+  Lists of the model metadata.
+
