@@ -6,11 +6,11 @@
 
 ## Overview
 
-I created this project to practice implementing an end-to-end machine learning pipeline. I used a SQLite relational database on DB Browser that I had created previously for a university course that stores Olympic results. It is strucutred by personal athelete information, sport details and country socio-economic data for the 2008, 2012, 2016 and 2020 Summer Olympic Games. It was created, cleaned and structured by myself and three other classmates. The raw data was primarily sourced from this Github repository: https://github.com/KeithGalli/Olympics-Dataset/tree/master
+I created this project to practice implementing an end-to-end machine learning pipeline. I used a SQLite relational database on DB Browser that I had created previously for a university course that stores Olympic results. It is strucutred by personal athelete information, sport details and country socio-economic data for the 2008, 2012, 2016 and 2020 Summer Olympic Games. It was created, cleaned and structured by myself and the raw data was primarily sourced from this Github repository: https://github.com/KeithGalli/Olympics-Dataset/tree/master
 
 The goal is to predict whether an athlete will win a medal (Gold, Silver, or Bronze) in comparison to the average medal rate from 2008-2020 of 10.8%. The database contains 34 features across 11 tables with 21,398 records spanning 12,354 athletes, 176 countries and 48 sports. After data cleaning, the total final data set contained 17,118 records. 
 
-Out of the initial features, I narrowed down my model to focus on the 16 features that were grouped by the following categories:
+Following feature selection, my model focused on the following categories:
 
 - **Physical attributes**:
 -   Height, weight
@@ -28,11 +28,22 @@ When evaluating my model on the test data, it had high accuracy as it correctly 
 The most predictive aspects of whether an athlete wins a medal were the country and sport medal rate respectively, suggesting that understanding the wider picture is important when assessing athlete performance since these metrics were almost an order of mangnitiude more predictive than physical characteristics. This could be explained by access to experienced coaches and a larger number of athletes to train with if a particular country is successful. Certain sports will have more medals available to them such as rowing and swimming, causing bias in this model. A more accurate version would analyse the medal rates within specific events. This allows the model to use the prior information of the medal-frequency within the sport before generating a prediction. Finally, the physical attributes has not taken into account gender, meaning that the weights of a 'fitter' athlete are not adjusted to their gender.
 The repository includes the following files:
 
--     olympic_ml_notebook.ipynb
-  Imports, database connection, summary statistics, feature engineering, model developement and testing.
--     olympic_medal_predictor_gb.pkl
-  Stores the model that has just created to avoid re-training.
--     model_metadata.pkl
-  Stores key information about the model including test results, hyperparameters and training data size.
-
+Jupyter notebooks:
+-     notebook_1_setup.ipynb
+  Imports, database connection, raw data extraction.
+-     notebook_2_eda_features.ipynb
+  Exploratory data analysis and feature engineering.
+-     notebook_3_model_dev.ipynb
+  Model development, hyperparameter optimsation and testing.
+-     notebook_4_visualisation.ipynb
+  Results and visualisation.
 ---
+Pickle files:
+-     olympic_data_raw.pkl
+  Exploratory data analysis and feature engineering.
+-     evaluation_results.pkl
+  Model and results.
+-     notebook_3_model_dev.ipynb
+  Model development, hyperparameter optimsation and testing.
+-     notebook_4_visualisation.ipynb
+  Results and visualisation.
