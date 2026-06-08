@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medal-predictor"
+version = "0.1.0"
+description = "Olympic medal prediction — a portfolio-grade quant research project"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Sophie Ledger" }]
+dependencies = [
+    "pandas==2.3.3",
+    "numpy==2.2.6",
+    "scikit-learn==1.7.2",
+    "matplotlib==3.10.9",
+    "seaborn==0.13.2",
+    "joblib==1.5.3",
+    "plotly==6.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "ruff==0.15.16",
+    "mypy==2.1.0",
+    "pre-commit==4.6.0",
+    "nbstripout==0.9.1",
+]
+
+# Tell the build tool the package lives under src/ (the "src layout").
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# --- Linter / formatter -------------------------------------------------------
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+# The legacy notebooks are rewritten in later phases; don't lint them yet.
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+# E/W = style, F = pyflakes (bugs), I = import sorting, UP = modernise syntax,
+# B = bugbear (likely-bug patterns).
+select = ["E", "W", "F", "I", "UP", "B"]
+
+# --- Type checker -------------------------------------------------------------
+[tool.mypy]
+python_version = "3.10"
+files = ["src"]
+# Third-party libs (pandas, sklearn...) ship incomplete type info; don't fail on theirs.
+ignore_missing_imports = true
+
+# --- Test runner --------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
