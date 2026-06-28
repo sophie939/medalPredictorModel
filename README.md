@@ -1,56 +1,92 @@
-# medalPredictorModel
+# Olympic Medal Predictor
 
-# Olympic Medal Prediction using Gradient Boosting 
+Predicting whether a Summer-Olympics athlete wins a medal (gold/silver/bronze) from
+their physical attributes, country economics and historical performance — built as a
+small but **methodologically honest** ML project. The emphasis is on evaluation rigour
+over a flashy headline number: time-respecting cross-validation, metrics that survive a
+10.8%-positive class, calibrated probabilities, and a quant-style "treat predictions as
+bets" framing.
 
----
+## Quickstart
 
-## Overview
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"        # installs the package + dev tools
+pytest                         # run the test suite
+# Then open the notebooks (Run All) to reproduce the figures:
+#   notebook_1_setup.ipynb        – load data, parse gender
+#   notebook_2_eda_features.ipynb – gender-aware features, leakage-safe rates
+#   notebook_3_results.ipynb      – walk-forward CV, PR/calibration/bootstrap, betting edge
+```
 
-I created this project to practice implementing an end-to-end machine learning pipeline. I used a SQLite relational database on DB Browser that I had created previously for a university course that stores Olympic results. It is strucutred by personal athelete information, sport details and country socio-economic data for the 2008, 2012, 2016 and 2020 Summer Olympic Games. It was created, cleaned and structured by myself and the raw data was primarily sourced from this Github repository: https://github.com/KeithGalli/Olympics-Dataset/tree/master
+All modelling logic lives in `src/medal_predictor/`; the notebooks are thin and just
+call it and plot.
 
-The goal is to predict whether an athlete will win a medal (Gold, Silver, or Bronze) in comparison to the average medal rate from 2008-2020 of 10.8%. The database contains 34 features across 11 tables with 21,398 records spanning 12,354 athletes, 176 countries and 48 sports. After data cleaning, the total final data set contained 17,118 records. 
+## The problem
 
-Following feature selection, my model focused on the following categories:
+The data is a SQLite database I built for a university course from the
+[KeithGalli Olympics dataset](https://github.com/KeithGalli/Olympics-Dataset), covering
+the 2008, 2012, 2016 and 2020 Summer Games. After cleaning: **17,118 athlete-event rows**
+across **176 countries** and **48 sports**. Only **10.8%** of rows are medals, so the
+class is heavily imbalanced — which drives every modelling decision below.
 
-- **Physical attributes**:
--   Height, weight
--   Derived values: BMI, a general health score and an injury risk score
--   Synthetic data using Python 'random' module: heart rate variability, vo2Max, blood oxygen levels
-- **Economic data by country**:
-- Derived values: GDP per capita
-- **Historical performance**:
--  Derived values: Country medal rate, average country ranking, sport medal rate, sport average ranking
+## Method
 
-I considered multiple binary classification algorithms to implement including logistic regression and random forests, but landed on gradient boosting for this version. To test the accuracy of my baseline model, I used a 80/20 test-train split with five-fold cross-validation. My mean Area Under the Curve Reciever Operator Characteristic (AUC ROC) score on the training data was 0.7506 suggesting that my model correctly discriminates between athletes who win a medal and who don't 75.06% of the time. Low standard deviation reassured me that the model is consistent across different subsets of data. To find the optimal choice of hyperparamters for my model, I compared the AUC-ROC score for each combination of the following hyperparaters used in gradient boosing: number of trees, maximum depth of each tree, the learning rate and the minimum number of samples required to split an internal node. This improved the AUC-ROC score by 0.72%.
+| Stage | Module | What it does |
+|-------|--------|--------------|
+| Data | `data.py` | SQL join over the DB; parses gender from event names, drops mixed/youth events |
+| Features | `features.py` | **Gender-stratified** height/weight z-scores, BMI, GDP-per-capita, real age, gender one-hot. Synthetic columns (HRV, VO2max, blood-oxygen, etc.) are **dropped** |
+| Leakage | `leakage.py` | Country/sport medal rates computed from **earlier Olympics only** — a 2016 athlete never sees 2020 |
+| CV | `cv.py` | `WalkForwardOlympicsSplit`: train years strictly precede the test year (2008→2012→2016→2020) |
+| Model | `model.py` | `StandardScaler` + `GradientBoostingClassifier`; hyper-parameter search scored on **PR-AUC**, not accuracy |
+| Evaluation | `evaluation.py` | PR-AUC / max-F1 threshold, calibration + Brier score, bootstrap 95% CIs |
+| Betting | `betting.py` | Implied odds, expected value vs the base-rate "market", Kelly sizing, PnL simulation |
 
-When evaluating my model on the test data, it had high accuracy as it correctly classified 89.63% of test cases. However, the majority of these cases were for correctly classifyig non-medal winners. A more meaningful metric would be the recal since the data set is imbalanced and the number of true positives (medal winners) is the more important category and it is very low at only 10.8%. The model has a recal of only 9%, meaning out of all medal winners within the test data, it correctly classifies 9%. However, this could be due to the test data size as only 462/4280 athletes were medal winners. The recall for non-medal winners was very high at 99%, so this cateogry is clearly easier for the model to identify. The model has good precision, as when it predicts a medal winner it is correct 64% of the time. The trade-off is that this is not predicting a medal winner frequently enough. Re-evaluating the model with a larger test/train split may be required.
+Three design choices an interviewer can probe:
 
-The most predictive aspects of whether an athlete wins a medal were the country and sport medal rate respectively, suggesting that understanding the wider picture is important when assessing athlete performance since these metrics were almost an order of mangnitiude more predictive than physical characteristics. This could be explained by access to experienced coaches and a larger number of athletes to train with if a particular country is successful. Certain sports will have more medals available to them such as rowing and swimming, causing bias in this model. A more accurate version would analyse the medal rates within specific events. This allows the model to use the prior information of the medal-frequency within the sport before generating a prediction. Finally, the physical attributes has not taken into account gender, meaning that the weights of a 'fitter' athlete are not adjusted to their gender.
-The repository includes the following files:
+- **Gender stratification.** The average male athlete is ~12 cm taller and ~16 kg heavier
+  than the average female. Treating them as one population makes physical features
+  meaningless, so height/weight are standardised *within gender* (54% of events parsed as
+  men, 43% as women, the rest dropped).
+- **No target leakage.** The original notebooks computed country/sport medal rates over the
+  *whole* dataset, so the feature for a 2016 athlete already baked in 2020 results.
+  `leakage.py` fixes this; it's the main reason the honest score is lower than the old one.
+- **No random k-fold.** Random folds let the model train on future Olympics to predict past
+  ones. Walk-forward CV mirrors how the model would actually be used.
 
-Jupyter notebooks:
--     notebook_1_setup.ipynb
-  Imports, database connection, raw data extraction.
--     notebook_2_eda_features.ipynb
-  Exploratory data analysis and feature engineering.
--     notebook_3_model_dev.ipynb
-  Model development, hyperparameter optimsation and testing.
--     notebook_4_visualisation.ipynb
-  Results and visualisation.
----
-Pickle files:
--     olympic_data_raw.pkl
-  Extracted raw data from database.
--     olympic_data_processed.pkl
-  Feature data pre-selection.
--     features_X.pkl
-  Feature data post-selection.
--     target_y.pkl
-  Data mapping whether an athlete wins a medal.
--     feature_names.pkl
-  A list of feature column names.
--     olympic_medal_predictor_gb.pkl
-  sklearn pipeline of the model.
--     evaluation_results.pkl
-  Lists of the model metadata.
+## Results
 
+> Numbers below are from the 2020 walk-forward hold-out — paste them in after a
+> `Run All` of `notebook_3_results.ipynb`.
+
+| Metric | Walk-forward (honest) | Old random 5-fold (leaky) |
+|--------|-----------------------|---------------------------|
+| AUC-ROC | _fill_ | 0.751 |
+| PR-AUC / Avg precision | _fill_ (95% CI [_lo_, _hi_]) | — |
+| Max-F1 (and threshold) | _fill_ | — |
+| Brier score | _fill_ | — |
+
+The story is deliberately *not* "accuracy went up". The old pipeline reported 89.6%
+accuracy and AUC 0.751 — both inflated by leakage and the easy true-negatives. Walk-forward
+evaluation on a 10.8% class gives a lower but **trustworthy** number, reported with a
+confidence interval and a calibration check. The betting section then asks the only
+question that matters for a probability model: *does the edge over the base rate translate
+into positive expected value?*
+
+## Limitations / next steps
+
+- Medal rates are by **sport**, not **event** — rowing/swimming hand out many more medals,
+  which biases those sports upward. Event-level rates would be the next feature.
+- Only four Olympics, so walk-forward has just three folds; CIs are correspondingly wide.
+- The "market" line is a flat base rate, not real bookmaker odds — the betting analysis is
+  illustrative of the framework, not a live edge.
+
+## Repo layout
+
+```
+src/medal_predictor/   # data, features, leakage, cv, model, evaluation, betting
+tests/                 # pytest suite for every module
+notebook_1..3          # thin notebooks that call src/ and plot
+pyproject.toml         # pinned deps + ruff/mypy/pytest config
+.github/workflows/     # CI: ruff + mypy + pytest on every push
+```
