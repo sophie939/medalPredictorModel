@@ -56,15 +56,14 @@ Three design choices an interviewer can probe:
 
 ## Results
 
-> Numbers below are from the 2020 walk-forward hold-out — paste them in after a
-> `Run All` of `notebook_3_results.ipynb`.
+> Numbers below are from the 2020 walk-forward hold-out (`notebook_3_results.ipynb`, `Run All`).
 
 | Metric | Walk-forward (honest) | Old random 5-fold (leaky) |
 |--------|-----------------------|---------------------------|
-| AUC-ROC | _fill_ | 0.751 |
-| PR-AUC / Avg precision | _fill_ (95% CI [_lo_, _hi_]) | — |
-| Max-F1 (and threshold) | _fill_ | — |
-| Brier score | _fill_ | — |
+| AUC-ROC | 0.707 | 0.751 |
+| PR-AUC / Avg precision | 0.305 (95% CI [0.262, 0.357]) | — |
+| Max-F1 (and threshold) | 0.360 (at threshold 0.171) | — |
+| Brier score | 0.108 | — |
 
 The story is deliberately *not* "accuracy went up". The old pipeline reported 89.6%
 accuracy and AUC 0.751 — both inflated by leakage and the easy true-negatives. Walk-forward

@@ -72,5 +72,5 @@ the three notebooks.
 
 ## TODO before sending to recruiters
 
-- [ ] `Run All` on `notebook_3_results.ipynb` so figures/outputs are saved in the file.
-- [ ] Paste the walk-forward numbers into the README results table (currently `_fill_`).
+- [x] `Run All` on `notebook_3_results.ipynb` so figures/outputs are saved in the file.
+- [x] Paste the walk-forward numbers into the README results table.
