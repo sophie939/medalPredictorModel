@@ -20,3 +20,4 @@ repos:
     rev: 0.9.1
     hooks:
       - id: nbstripout # strip bulky notebook output before committing
+        exclude: ^notebook_3_results\.ipynb$ # keep results figures/output visible on GitHub

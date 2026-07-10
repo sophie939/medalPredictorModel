@@ -1,7 +1,8 @@
 """medal_predictor — Olympic medal prediction package.
 
-Phase 1 scaffolding: modules are stubs to be implemented in later phases.
-See ``PLAN.md`` for the full roadmap.
+End-to-end pipeline: ``data`` -> ``features`` (+ leakage-safe ``leakage`` rates) ->
+``cv`` walk-forward splits -> ``model`` -> ``evaluation`` -> ``betting``.
+See ``SUMMARY.md`` for the project overview.
 """
 
 __version__ = "0.1.0"
