@@ -42,7 +42,7 @@ class is heavily imbalanced — which drives every modelling decision below.
 | Evaluation | `evaluation.py` | PR-AUC / max-F1 threshold, calibration + Brier score, bootstrap 95% CIs |
 | Betting | `betting.py` | Implied odds, expected value vs the base-rate "market", Kelly sizing, PnL simulation |
 
-Three design choices an interviewer can probe:
+Design choices:
 
 - **Gender stratification.** The average male athlete is ~12 cm taller and ~16 kg heavier
   than the average female. Treating them as one population makes physical features
