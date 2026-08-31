@@ -1,11 +1,7 @@
 # Olympic Medal Predictor
 
 Predicting whether a Summer-Olympics athlete wins a medal (gold/silver/bronze) from
-their physical attributes, country economics and historical performance — built as a
-small but **methodologically honest** ML project. The emphasis is on evaluation rigour
-over a flashy headline number: time-respecting cross-validation, metrics that survive a
-10.8%-positive class, calibrated probabilities, and a quant-style "treat predictions as
-bets" framing.
+their physical attributes, country economics and historical performance.
 
 ## Quickstart
 
@@ -28,7 +24,7 @@ The data is a SQLite database I built for a university course from the
 [KeithGalli Olympics dataset](https://github.com/KeithGalli/Olympics-Dataset), covering
 the 2008, 2012, 2016 and 2020 Summer Games. After cleaning: **17,118 athlete-event rows**
 across **176 countries** and **48 sports**. Only **10.8%** of rows are medals, so the
-class is heavily imbalanced — which drives every modelling decision below.
+class is heavily imbalanced.
 
 ## Method
 
@@ -65,10 +61,8 @@ Design choices:
 | Max-F1 (and threshold) | 0.360 (at threshold 0.171) | — |
 | Brier score | 0.108 | — |
 
-The story is deliberately *not* "accuracy went up". The old pipeline reported 89.6%
-accuracy and AUC 0.751 — both inflated by leakage and the easy true-negatives. Walk-forward
-evaluation on a 10.8% class gives a lower but **trustworthy** number, reported with a
-confidence interval and a calibration check. The betting section then asks the only
+The results show accuracy decreased, but it is a more trustworthy number. The old pipeline reported 89.6%
+accuracy and AUC 0.751 — both inflated by leakage and the easy true-negatives. The betting section then asks the only
 question that matters for a probability model: *does the edge over the base rate translate
 into positive expected value?*
 
