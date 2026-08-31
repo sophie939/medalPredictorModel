@@ -1,8 +1,5 @@
 # Project summary — Olympic Medal Predictor
 
-A one-page reference for *me*: what this project is, how it fits together, and how to talk
-about it in an interview. (README is the public-facing version; this is the cheat-sheet.)
-
 ## In one sentence
 
 A gradient-boosting model that predicts whether an Olympic athlete medals, rebuilt from a
